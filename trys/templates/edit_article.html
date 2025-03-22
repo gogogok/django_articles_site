@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('{% static "images/back.jpg" %}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            margin: 0;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/MyCss.css' %}">
+    <title>Редактирование статей</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'index' %}">Главная</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'articles' %}">Просмотр всех статей</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Фильтрация и сортировка
+          </a>
+          <ul class="dropdown-menu">
+           <li><a class="dropdown-item" href="{% url 'articles' %}?sort=author">Сортировка по автору</a></li>
+              <li><a class="dropdown-item" href="{% url 'articles' %}?sort=date">Сортировка по дате создания</a></li>
+            <li><a class="dropdown-item" href="{% url 'articles' %}?sort=resource">Сортировка по ресурсу</a></li>
+            <li><a class="dropdown-item" href="{% url 'articles' %}?sort=title">Сортировка по названию статьи</a></li>
+                <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Фильтрация и вывод статей</a>
+                <form method="get" action="{% url 'articles' %}">
+                <div>
+                    <label for="author">Автор:</label>
+                    <input type="text" id="author" name="author" value="{{ request.GET.author }}">
+                </div>
+                <div>
+                    <label for="date">Дата создания:</label>
+                    <input type="date" id="date" name="date" value="{{ request.GET.date }}">
+                </div>
+                <div>
+                    <label for="resource">Ресурс:</label>
+                    <input type="text" id="resource" name="resource" value="{{ request.GET.resource }}">
+                </div>
+                <div>
+                    <label for="text">Текст статьи:</label>
+                    <input type="text" id="text" name="content" value="{{ request.GET.content }}">
+                </div>
+                <button type="submit" class="form-button">Применить фильтры</button>
+                </form>
+            </li>
+
+          </ul>
+        </li>
+          <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'contact' %}">Контактная информация</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Создание и удаление
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'create_article' %}">Создать</a></li>
+            <li><a class="dropdown-item" href="{% url 'delete_article' %}">Удалить</a></li>
+          </ul>
+        </li>
+      </ul>
+      <form class="d-flex" role="search" method="get" action="{% url 'articles' %}">
+        <input class="form-control me-2" type="search" name="title" placeholder="Поиск статей" aria-label="Search" value="{{ request.GET.title }}">
+        <button class="btn btn-outline-success" type="submit">Поиск</button>
+      </form>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+    <h1 class="my-4">Редактирование статьи</h1>
+    <form method="post" action="{% url 'edit_article' article.filename %}">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="title" class="form-label">Заголовок:</label>
+        <input type="text" class="form-control" id="title" name="title" value="{{ article.title }}">
+      </div>
+      <div class="mb-3">
+        <label for="author" class="form-label">Автор:</label>
+        <input type="text" class="form-control" id="author" name="author" value="{{ article.author|cut:'Автор: ' }}">
+      </div>
+      <div class="mb-3">
+        <label for="resource" class="form-label">Ресурс:</label>
+        <input type="text" class="form-control" id="resource" name="resource" value="{{ article.resource|cut:'Ресурс: ' }}">
+      </div>
+      <div class="mb-3">
+        <label for="content" class="form-label">Текст статьи:</label>
+        <textarea class="form-control" id="content" name="content" rows="10">{{ article.content }}</textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+      <a href="{% url 'articles' %}" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>
+
+</body>
+</html>
