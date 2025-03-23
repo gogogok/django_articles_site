@@ -36,7 +36,8 @@
           </a>
           <ul class="dropdown-menu">
            <li><a class="dropdown-item" href="{% url 'articles' %}?sort=author">Сортировка по автору</a></li>
-              <li><a class="dropdown-item" href="{% url 'articles' %}?sort=date">Сортировка по дате создания</a></li>
+             <li><a class="dropdown-item" href="{% url 'articles' %}?sort=date">Сортировка по дате создания (сначала новые)</a></li>
+               <li><a class="dropdown-item" href="{% url 'articles' %}?sort=date_back">Сортировка по дате создания (сначала старые)</a></li>
             <li><a class="dropdown-item" href="{% url 'articles' %}?sort=resource">Сортировка по ресурсу</a></li>
             <li><a class="dropdown-item" href="{% url 'articles' %}?sort=title">Сортировка по названию статьи</a></li>
                 <li><hr class="dropdown-divider"></li>

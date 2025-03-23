@@ -76,16 +76,12 @@ def create_article(request):
         resource = "Ресурс: " + request.POST.get('resource')
         content = f"{title}\n{author}\n{date}\n{resource}\n\n{request.POST.get('content')}"
         articles_dir = os.path.join(settings.BASE_DIR, 'AllArticles')
-        i =  length(os.listdir(articles_dir)) + 1
-        res_i = 0
-        for filename in os.listdir(articles_dir):
-            i-=1
-            match = int(re.findall(r'\d+', filename)[0])
-            if match != i:
-                res_i += i
-                break
-        if res_i == 0:
-            res_i = length(os.listdir(articles_dir)) + 1
+        existing_files = os.listdir(articles_dir)
+        existing_indices = [int(re.findall(r'\d+', filename)[0]) for filename in existing_files if filename.startswith('article-')]
+        if existing_indices:
+            res_i = max(existing_indices) + 1
+        else:
+            res_i = 1
         if title and content and date and author and resource:
             filename = f"article-{res_i}.txt"
             file_path = os.path.join(settings.BASE_DIR, 'AllArticles', filename)
@@ -145,6 +141,4 @@ def edit_article(request, filename):
         with open(file_path, 'w', encoding='utf-8') as file:
             file.write(f"{title}\nАвтор: {author}\nДата создания: {datetime.now().strftime('%d.%m.%Y')}\nРесурс: {resource}\n\n{content}")
         return redirect('articles')
-
-    # Отображение формы редактирования
     return render(request, 'edit_article.html', {'article': article})
